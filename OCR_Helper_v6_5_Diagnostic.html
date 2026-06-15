@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OCR 小幫手 v6.5 診斷版</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e5eaf2;--main:#17223b;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--amber:#d97706;--soft:#f8fafc}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f3f6fb,#eef2f8);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--ink)}
+.app{max-width:1280px;margin:0 auto;padding:18px}.hero{background:#fff;border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:0 18px 48px rgba(20,31,55,.08);margin-bottom:16px}.title{display:flex;align-items:center;gap:14px}.logo{width:48px;height:48px;border-radius:16px;background:var(--main);color:#fff;display:grid;place-items:center;font-weight:900}.title h1{font-size:23px;margin:0}.title p{margin:4px 0 0;color:var(--muted);font-size:14px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}.btn{border-radius:14px;padding:11px 15px;font-weight:850;cursor:pointer;background:#fff;border:1px solid var(--line);color:var(--main);box-shadow:0 4px 10px rgba(15,23,42,.05)}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.dark{background:var(--main);color:#fff}.btn.green{background:#dcfce7;color:#166534;border-color:#bbf7d0}.btn:disabled{opacity:.45;cursor:not-allowed}.fileInput{display:none}.select,.input{border:1px solid var(--line);border-radius:13px;padding:10px 12px;background:#fff;color:var(--ink);font-weight:700}.progress{height:12px;background:#edf2f7;border-radius:999px;overflow:hidden;margin-top:12px}.bar{height:100%;width:0%;background:linear-gradient(90deg,#2563eb,#22c55e);transition:.25s}.hint{font-size:13px;color:var(--muted);line-height:1.7;margin-top:9px}.grid{display:grid;grid-template-columns:460px 1fr;gap:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 12px 28px rgba(20,31,55,.06)}.panel h2{font-size:17px;margin:0 0 12px}.previewBox{background:#101827;border-radius:18px;min-height:560px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;color:#fff;padding:10px}.previewStack{display:flex;flex-direction:column;gap:12px;align-items:center}.pageWrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.25)}.pageLabel{color:#cbd5e1;font-size:12px;text-align:center;margin-bottom:5px}.previewBox canvas,.previewBox img{max-width:100%;height:auto;background:#fff;display:block}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}.stat{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:12px}.stat b{display:block;font-size:21px}.stat span{font-size:12px;color:var(--muted);font-weight:800}.stat.ok b{color:var(--green)}.stat.warn b{color:var(--amber)}.stat.bad b{color:var(--red)}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:#fff;font-weight:850;color:#526079;cursor:pointer}.tab.active{background:var(--main);color:#fff;border-color:var(--main)}.hidden{display:none!important}.raw{width:100%;min-height:500px;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:15px;line-height:1.8;white-space:pre-wrap;background:#fbfcff;resize:vertical;font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif}.diagGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{border:1px solid var(--line);border-radius:16px;background:#fbfcff;padding:13px}.card h3{margin:0 0 8px;font-size:15px}.kv{display:grid;grid-template-columns:150px 1fr;gap:8px;border-bottom:1px dashed #d8e0eb;padding:7px 0;font-size:14px}.kv:last-child{border-bottom:0}.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:12px;font-weight:900;margin:3px}.badge.red{background:#fee2e2;color:#991b1b}.badge.amber{background:#fef3c7;color:#92400e}.badge.green{background:#dcfce7;color:#166534}.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fbfcff;min-height:420px;white-space:pre-wrap;line-height:1.7;overflow:auto}.miniTitle{font-size:13px;color:var(--muted);font-weight:900;margin-bottom:7px}.issueList{margin:0;padding-left:20px;line-height:1.8}.issueList li{margin-bottom:4px}.switches{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.switches label{font-size:13px;font-weight:850;color:#526079;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 10px}.mark{background:#fff3cd;border-radius:5px;padding:0 3px}.footerBtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:960px){.app{padding:12px}.grid,.compare{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.diagGrid{grid-template-columns:1fr}.previewBox{min-height:300px}.title h1{font-size:20px}.toolbar{gap:8px}.btn,.select,.input{width:100%}.switches label{width:100%}.kv{grid-template-columns:120px 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div class="title"><div class="logo">OCR</div><div><h1>OCR 小幫手 v6.5 診斷版</h1><p>先確認 OCR 本體是否穩定，再決定要不要做欄位解析。</p></div></div>
+    <div class="toolbar">
+      <label class="btn dark" for="filePicker">選擇 PDF / 圖片</label><input id="filePicker" class="fileInput" type="file" accept="application/pdf,image/*" />
+      <button id="ocrBtn" class="btn primary" disabled>開始 OCR 診斷</button>
+      <button id="copyBtn" class="btn green" disabled>複製 OCR 全文</button>
+      <button id="txtBtn" class="btn" disabled>下載診斷 TXT</button>
+      <select id="dpiMode" class="select" title="PDF渲染倍率"><option value="2.4">標準清晰</option><option value="3.2" selected>高解析</option><option value="4.0">極高解析</option></select>
+      <select id="preMode" class="select" title="影像處理"><option value="gray">灰階強化</option><option value="binary" selected>黑白強化</option><option value="soft">柔化保留</option></select>
+    </div>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+    <div id="status" class="hint">請先選擇檔案。這版不做欄位擷取，只檢查 OCR 是否完整。</div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>1. 原始預覽 / OCR來源圖</h2>
+      <div id="preview" class="previewBox">尚未選擇檔案</div>
+      <div class="hint">若預覽本身模糊、字太小或缺頁，後面的 OCR 一定不穩。建議先用「高解析」或「極高解析」測試。</div>
+    </section>
+
+    <section class="panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="diagTab">診斷結果</button>
+        <button class="tab" data-tab="rawTab">OCR 全文</button>
+        <button class="tab" data-tab="compareTab">關鍵字檢查</button>
+      </div>
+      <div class="stats">
+        <div class="stat" id="scoreCard"><b id="score">-</b><span>OCR完整度</span></div>
+        <div class="stat"><b id="charCount">0</b><span>總字數</span></div>
+        <div class="stat"><b id="zhCount">0</b><span>中文字數</span></div>
+        <div class="stat"><b id="pageCount">0</b><span>頁數</span></div>
+      </div>
+
+      <div id="diagTab" class="tabPage">
+        <div class="diagGrid">
+          <div class="card">
+            <h3>OCR 狀態</h3>
+            <div id="diagKvs"></div>
+          </div>
+          <div class="card">
+            <h3>建議判斷</h3>
+            <div id="verdict" class="hint">尚未開始。</div>
+          </div>
+          <div class="card">
+            <h3>疑似問題</h3>
+            <ul id="issues" class="issueList"><li>尚未開始。</li></ul>
+          </div>
+          <div class="card">
+            <h3>偵測到的公文關鍵字</h3>
+            <div id="keywordBadges"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="rawTab" class="tabPage hidden">
+        <textarea id="rawText" class="raw" placeholder="OCR全文會顯示在這裡。你可以先看是不是連『受文者、發文日期、發文字號、主旨、說明』都完整出現。"></textarea>
+        <div class="footerBtns"><button id="analyzeBtn" class="btn">依目前文字重新診斷</button></div>
+      </div>
+
+      <div id="compareTab" class="tabPage hidden">
+        <div class="compare">
+          <div>
+            <div class="miniTitle">必備關鍵字檢查</div>
+            <div id="requiredBox" class="box"></div>
+          </div>
+          <div>
+            <div class="miniTitle">疑似 OCR 錯字 / 亂碼</div>
+            <div id="noiseBox" class="box"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+(function(){
+'use strict';
+var state={file:null,fileName:'-',canvases:[],raw:'',pages:0,ocrEngine:'Tesseract.js',pdfEngine:'PDF.js',renderScale:3.2,preMode:'binary'};
+var $=function(id){return document.getElementById(id)};
+var required=['受文者','發文日期','發文字號','速別','附件','主旨','說明','正本','副本'];
+var commonMistakes=['受交者','受又者','發文宇號','發文子號','發文字虢','附牛','主日','說朋','正木','副木','第l頁','第I頁','環典','環與','達利','遠和'];
+function setStatus(t,p){$('status').textContent=t;if(typeof p==='number')$('bar').style.width=Math.max(0,Math.min(100,p))+'%'}
+function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function normalize(t){return String(t||'').replace(/\r/g,'\n').replace(/[　]/g,' ').replace(/[０-９]/g,function(ch){return String.fromCharCode(ch.charCodeAt(0)-0xFEE0)}).replace(/\n{3,}/g,'\n\n').trim()}
+function countZh(t){var m=String(t||'').match(/[\u4e00-\u9fff]/g);return m?m.length:0}
+function countNoise(t){var s=String(t||''), bad=0; bad+=(s.match(/[�□■◆◇●◎]/g)||[]).length; bad+=(s.match(/[A-Za-z0-9]{18,}/g)||[]).length; bad+=(s.match(/[|｜]{2,}/g)||[]).length; return bad}
+function download(name,content,type){var blob=new Blob([content],{type:type||'text/plain;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000)}
+function fileShort(n){return !n?'-':(n.length>18?n.slice(0,18)+'…':n)}
+function kv(k,v){return '<div class="kv"><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div>'}
+function assess(text){
+  var raw=normalize(text), chars=raw.replace(/\s/g,'').length, zh=countZh(raw), noise=countNoise(raw);
+  var found=required.filter(function(k){return raw.indexOf(k)>=0});
+  var missing=required.filter(function(k){return raw.indexOf(k)<0});
+  var mistakeFound=commonMistakes.filter(function(k){return raw.indexOf(k)>=0});
+  var zhRatio=chars?zh/chars:0;
+  var score=0;
+  if(chars>=1200)score+=35; else if(chars>=900)score+=28; else if(chars>=650)score+=18; else if(chars>=350)score+=8;
+  score+=Math.round((found.length/required.length)*35);
+  if(zhRatio>=0.72)score+=15; else if(zhRatio>=0.55)score+=10; else if(zhRatio>=0.35)score+=5;
+  if(noise<=3)score+=10; else if(noise<=10)score+=6; else if(noise<=20)score+=3;
+  if(mistakeFound.length===0)score+=5; else if(mistakeFound.length<=2)score+=2;
+  score=Math.max(0,Math.min(100,score));
+  return {raw:raw,chars:chars,zh:zh,noise:noise,found:found,missing:missing,mistakeFound:mistakeFound,zhRatio:zhRatio,score:score};
+}
+function renderAssessment(){
+  var a=assess(state.raw);
+  $('rawText').value=state.raw;
+  $('charCount').textContent=a.chars;
+  $('zhCount').textContent=a.zh;
+  $('pageCount').textContent=state.pages||0;
+  $('score').textContent=a.score? a.score+'%' : '-';
+  $('scoreCard').className='stat '+(a.score>=85?'ok':a.score>=65?'warn':'bad');
+  $('diagKvs').innerHTML=
+    kv('檔案', state.fileName||'-')+
+    kv('PDF頁數', state.pages||'-')+
+    kv('PDF解析方式', state.file && state.file.type==='application/pdf' ? state.pdfEngine : '圖片直接讀取')+
+    kv('OCR引擎', state.ocrEngine)+' '+
+    kv('語言包', 'chi_tra + eng')+
+    kv('渲染倍率', String(state.renderScale))+
+    kv('影像處理', state.preMode==='binary'?'黑白強化':state.preMode==='gray'?'灰階強化':'柔化保留')+
+    kv('中文字比例', a.chars?Math.round(a.zhRatio*100)+'%':'-')+
+    kv('疑似亂碼數', a.noise);
+  var verdict='';
+  if(a.score>=85){verdict='<span class="badge green">可進入欄位解析</span><p>OCR 全文看起來足夠完整。這種品質下，再做發文機關、主旨、說明等欄位解析才有意義。</p>';}
+  else if(a.score>=65){verdict='<span class="badge amber">勉強可用</span><p>OCR 有抓到主要結構，但可能缺字或換行混亂。建議先檢查「OCR 全文」是否有完整主旨與說明。</p>';}
+  else{verdict='<span class="badge red">不建議解析欄位</span><p>OCR 本體不完整。若此時強行抓欄位，主旨、正本、副本很容易錯位。</p>';}
+  $('verdict').innerHTML=verdict;
+  var issues=[];
+  if(a.chars<650)issues.push('辨識字數偏少。單頁正式函文通常不應只有幾百字，可能是 PDF 轉圖、語言包或手機瀏覽器載入不完整。');
+  if(a.missing.length)issues.push('缺少關鍵字：'+a.missing.join('、')+'。若原文確實有這些欄位，代表 OCR 沒有完整讀到。');
+  if(a.zhRatio<0.55)issues.push('中文字比例偏低，可能把中文辨成英文、符號或空白。');
+  if(a.noise>10)issues.push('疑似亂碼偏多，可能掃描解析度不足或黑白處理太強。');
+  if(a.mistakeFound.length)issues.push('偵測到疑似錯字：'+a.mistakeFound.join('、')+'。');
+  if(!issues.length)issues.push('目前沒有明顯問題。');
+  $('issues').innerHTML=issues.map(function(x){return '<li>'+esc(x)+'</li>'}).join('');
+  $('keywordBadges').innerHTML=required.map(function(k){var ok=a.found.indexOf(k)>=0;return '<span class="badge '+(ok?'green':'red')+'">'+(ok?'✓ ':'✗ ')+esc(k)+'</span>'}).join('');
+  $('requiredBox').innerHTML=required.map(function(k){
+    var idx=a.raw.indexOf(k); if(idx<0)return '<div><span class="badge red">缺少 '+esc(k)+'</span></div>';
+    var snip=a.raw.slice(Math.max(0,idx-30),Math.min(a.raw.length,idx+80)).replace(k,'<span class="mark">'+k+'</span>');
+    return '<div style="margin-bottom:14px"><span class="badge green">找到 '+esc(k)+'</span><br>'+snip+'</div>';
+  }).join('');
+  var noiseHtml='';
+  if(a.mistakeFound.length){noiseHtml+=a.mistakeFound.map(function(k){var idx=a.raw.indexOf(k);var snip=a.raw.slice(Math.max(0,idx-30),Math.min(a.raw.length,idx+80)).replace(k,'<span class="mark">'+k+'</span>');return '<div style="margin-bottom:14px"><span class="badge amber">疑似 '+esc(k)+'</span><br>'+snip+'</div>';}).join('');}
+  else noiseHtml='<span class="badge green">未偵測到常見錯字</span>';
+  $('noiseBox').innerHTML=noiseHtml;
+}
+async function renderPdf(file){
+  if(!window.pdfjsLib)throw new Error('PDF.js 載入失敗，請確認網路連線。');
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  var buf=await file.arrayBuffer();
+  var pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  state.pages=pdf.numPages; state.canvases=[];
+  var maxPages=Math.min(pdf.numPages,3);
+  for(var i=1;i<=maxPages;i++){
+    setStatus('正在轉換 PDF 第 '+i+' / '+maxPages+' 頁...',5+i*8);
+    var page=await pdf.getPage(i);
+    var viewport=page.getViewport({scale:state.renderScale});
+    var canvas=document.createElement('canvas');canvas.width=viewport.width;canvas.height=viewport.height;
+    var ctx=canvas.getContext('2d',{willReadFrequently:true});
+    await page.render({canvasContext:ctx,viewport:viewport}).promise;
+    state.canvases.push(enhance(canvas));
+  }
+  return state.canvases;
+}
+async function renderImage(file){
+  state.pages=1; var url=URL.createObjectURL(file), img=new Image();
+  await new Promise(function(res,rej){img.onload=res;img.onerror=rej;img.src=url});
+  var max=3200, scale=Math.min(1,max/Math.max(img.width,img.height));
+  var c=document.createElement('canvas'); c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+  c.getContext('2d',{willReadFrequently:true}).drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+  state.canvases=[enhance(c)]; return state.canvases;
+}
+function enhance(canvas){
+  var c=document.createElement('canvas'); c.width=canvas.width; c.height=canvas.height; var ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(canvas,0,0);
+  var img=ctx.getImageData(0,0,c.width,c.height), d=img.data, mode=state.preMode;
+  for(var i=0;i<d.length;i+=4){
+    var g=d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114;
+    if(mode==='binary'){g=(g-128)*1.55+128; g=g>176?255:(g<122?0:g);}
+    else if(mode==='gray'){g=(g-128)*1.28+128; g=Math.max(0,Math.min(255,g));}
+    else {g=Math.max(0,Math.min(255,g));}
+    d[i]=d[i+1]=d[i+2]=g;
+  }
+  ctx.putImageData(img,0,0); return c;
+}
+function showPreview(){
+  var box=$('preview'); box.innerHTML=''; var stack=document.createElement('div'); stack.className='previewStack';
+  state.canvases.forEach(function(c,i){var label=document.createElement('div'); label.className='pageLabel'; label.textContent='第 '+(i+1)+' 頁 OCR來源圖'; var wrap=document.createElement('div'); wrap.className='pageWrap'; var clone=document.createElement('canvas'); clone.width=c.width; clone.height=c.height; clone.getContext('2d').drawImage(c,0,0); wrap.appendChild(clone); var group=document.createElement('div'); group.appendChild(label); group.appendChild(wrap); stack.appendChild(group);});
+  box.appendChild(stack);
+}
+async function runOCR(){
+  if(!state.canvases.length)return;
+  if(!window.Tesseract)throw new Error('Tesseract.js 載入失敗，請確認網路連線。');
+  var texts=[];
+  for(var i=0;i<state.canvases.length;i++){
+    var pageNo=i+1; setStatus('OCR 辨識第 '+pageNo+' / '+state.canvases.length+' 頁...',30);
+    var result=await Tesseract.recognize(state.canvases[i],'chi_tra+eng',{logger:function(m){
+      if(m.status){var base=30+(pageNo-1)*(60/state.canvases.length); var p=base+(m.progress||0)*(60/state.canvases.length); setStatus('第 '+pageNo+' 頁：'+m.status+' '+Math.round((m.progress||0)*100)+'%',p);}
+    }});
+    texts.push('【第 '+pageNo+' 頁】\n'+(result.data.text||''));
+  }
+  state.raw=normalize(texts.join('\n\n'));
+  renderAssessment(); ['copyBtn','txtBtn'].forEach(function(id){$(id).disabled=false});
+  setStatus('診斷完成。請先看 OCR 全文是否完整，再決定是否回到欄位解析版。',100);
+}
+function reportText(){
+  var a=assess(state.raw);
+  return 'OCR 小幫手 v6.5 診斷報告\n'+
+    '檔案：'+(state.fileName||'-')+'\n'+
+    '頁數：'+(state.pages||'-')+'\n'+
+    '完整度：'+a.score+'%\n'+
+    '總字數：'+a.chars+'\n'+
+    '中文字數：'+a.zh+'\n'+
+    '疑似亂碼：'+a.noise+'\n'+
+    '找到關鍵字：'+a.found.join('、')+'\n'+
+    '缺少關鍵字：'+a.missing.join('、')+'\n\n'+
+    '===== OCR全文 =====\n'+state.raw;
+}
+$('filePicker').addEventListener('change',async function(e){
+  try{
+    var file=e.target.files[0]; if(!file)return; state.file=file; state.fileName=file.name; state.renderScale=parseFloat($('dpiMode').value); state.preMode=$('preMode').value;
+    $('ocrBtn').disabled=true; ['copyBtn','txtBtn'].forEach(function(id){$(id).disabled=true}); state.raw=''; renderAssessment(); setStatus('正在建立 OCR 來源圖...',3);
+    if(file.type==='application/pdf') await renderPdf(file); else await renderImage(file);
+    showPreview(); $('ocrBtn').disabled=false; setStatus('預覽完成。請按「開始 OCR 診斷」。',25);
+  }catch(err){console.error(err); setStatus('預覽失敗：'+err.message,0)}
+});
+$('ocrBtn').addEventListener('click',function(){runOCR().catch(function(err){console.error(err);setStatus('OCR 失敗：'+err.message,0)})});
+$('copyBtn').addEventListener('click',async function(){try{await navigator.clipboard.writeText(state.raw);setStatus('已複製 OCR 全文。',100)}catch(e){download('OCR全文.txt',state.raw,'text/plain;charset=utf-8')}});
+$('txtBtn').addEventListener('click',function(){download('OCR診斷報告.txt',reportText(),'text/plain;charset=utf-8')});
+$('analyzeBtn').addEventListener('click',function(){state.raw=normalize($('rawText').value);renderAssessment();setStatus('已依目前文字重新診斷。',100)});
+$('rawText').addEventListener('input',function(){state.raw=this.value;renderAssessment()});
+document.querySelectorAll('.tab').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active')});btn.classList.add('active');document.querySelectorAll('.tabPage').forEach(function(p){p.classList.add('hidden')});$(btn.dataset.tab).classList.remove('hidden')})});
+renderAssessment();
+})();
+</script>
+</body>
+</html>
