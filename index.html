@@ -1,129 +1,1348 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>PDF 工具箱 v5 Enterprise Review Edition</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Studio Pro V5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/lucide@0.292.0"></script>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--line:#dfe6ef;--text:#0f233d;--muted:#64748b;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--amber:#f59e0b;--soft:#f8fafc}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Microsoft JhengHei",system-ui,sans-serif;color:var(--text)}
-.wrap{max-width:1180px;margin:0 auto;padding:28px}h1{margin:0 0 6px;font-size:34px;letter-spacing:.5px}.sub{margin:0 0 22px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:430px 1fr;gap:20px;align-items:start}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 22px rgba(15,35,61,.06);overflow:hidden}.hd{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.hd h2{margin:0;font-size:20px}.bd{padding:22px}
-.drop{border:2px dashed #c8d6ea;border-radius:18px;background:#f8fbff;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;cursor:pointer}.drop:hover{border-color:#7aa7ff}.icon{font-size:58px}.fileName{font-weight:800;margin-top:10px;word-break:break-all}.meta{color:var(--muted);font-size:14px;margin-top:6px}.hidden{display:none!important}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.stat{border:1px solid var(--line);border-radius:16px;background:var(--soft);padding:16px;text-align:center}.num{font-size:30px;font-weight:900}.lab{color:var(--muted);font-size:13px}.bar{height:10px;background:#dbeafe;border-radius:999px;overflow:hidden;margin:14px 0}.bar>i{display:block;width:0;height:100%;background:var(--blue);transition:.25s}
-.btn{width:100%;border:0;border-radius:14px;padding:15px 18px;font-size:18px;font-weight:900;cursor:pointer;margin-top:12px}.primary{background:var(--blue);color:#fff}.danger{background:#fee2e2;color:#991b1b}.success{background:#dcfce7;color:#166534}.gray{background:#eef2f7;color:#0f233d}.btn:disabled{opacity:.45;cursor:not-allowed}.small{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;background:#eef2f7;color:#0f233d}
-.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.6;margin-top:14px}.ok{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.err{background:#fef2f2;border-color:#fecaca;color:#991b1b}.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
-.reviewLayout{display:grid;grid-template-columns:310px 1fr;min-height:620px}.listPane{border-right:1px solid var(--line);background:#fbfdff}.toolbar{padding:14px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px}.pageList{padding:14px;max-height:640px;overflow:auto}.empty{padding:30px 18px;text-align:center;color:var(--muted);line-height:1.7}.item{border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:10px;padding:12px;display:grid;grid-template-columns:28px 1fr;gap:8px;cursor:pointer}.item.active{outline:2px solid #93c5fd;border-color:#93c5fd}.item.blank{background:#fff7ed;border-color:#fed7aa}.item .title{font-weight:900}.item .desc{font-size:13px;color:var(--muted);margin-top:4px}.score{font-size:12px;color:#92400e;margin-top:4px}.previewPane{padding:18px;background:#eef3f8}.previewTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.previewTitle b{font-size:20px}.previewBox{background:#dbe3ee;border:1px solid #cbd5e1;border-radius:16px;min-height:560px;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:18px}.previewBox canvas{background:#fff;box-shadow:0 12px 28px rgba(15,35,61,.18);max-width:100%;height:auto}.hint{color:var(--muted);line-height:1.7}.footerOps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.debug{font-family:ui-monospace,Consolas,monospace;background:#0f172a;color:#dbeafe;border-radius:14px;padding:12px;max-height:170px;overflow:auto;font-size:12px;white-space:pre-wrap;margin-top:14px}
-@media(max-width:900px){.grid,.reviewLayout{grid-template-columns:1fr}.listPane{border-right:0;border-bottom:1px solid var(--line)}.wrap{padding:18px}}
+    :root {
+        --bg-dark: #1e1e1e; --bg-panel: #252526; --bg-hover: #2a2d2e;
+        --accent: #007acc; --accent-hover: #005f9e;
+        --text-main: #cccccc; --text-muted: #858585; --border: #3c3c3c;
+    }
+    [data-theme="light"] {
+        --bg-dark: #f3f4f6; --bg-panel: #ffffff; --bg-hover: #f1f5f9;
+        --accent: #2563eb; --accent-hover: #1d4ed8;
+        --text-main: #1f2937; --text-muted: #6b7280; --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body { 
+        margin: 0; padding: 0; height: 100vh; overflow: hidden;
+        background: var(--bg-dark); color: var(--text-main);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex; flex-direction: column; user-select: none;
+        transition: background 0.2s, color 0.2s;
+    }
+    .header { height: 44px; background: var(--bg-panel); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border); letter-spacing: 0.5px; z-index: 10; }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .icon-btn { background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 4px; transition: 0.2s; }
+    .icon-btn:hover { background: var(--bg-hover); }
+
+    .progress-container { width: 100%; height: 2px; background: var(--border); position: relative; z-index: 10; }
+    .progress-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.2s; }
+    
+    .main-container { display: flex; flex: 1; overflow: hidden; }
+    
+    /* Left Sidebar */
+    .sidebar-left { width: 250px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 2; transition: background 0.2s; }
+    
+    .search-box { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    .search-input-wrapper { position: relative; }
+    .search-input-wrapper i { position: absolute; left: 8px; top: 7px; width: 14px; color: var(--text-muted); }
+    .search-input { width: 100%; padding: 6px 8px 6px 28px; background: var(--bg-dark); border: 1px solid var(--border); color: var(--text-main); border-radius: 4px; font-size: 12px; outline: none; transition: 0.2s; }
+    .search-input:focus { border-color: var(--accent); }
+
+    .panel-title { padding: 12px 16px; font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700; border-bottom: 1px solid var(--border); letter-spacing: 1px; }
+    .tool-list { flex: 1; overflow-y: auto; }
+    .tool-btn { 
+        padding: 10px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; 
+        border-bottom: 1px solid var(--border); font-size: 13px; transition: 0.1s; color: var(--text-main);
+    }
+    .tool-btn:hover { background: var(--bg-hover); }
+    .tool-btn:active { background: var(--border); }
+    .tool-btn.primary { color: var(--accent); font-weight: 600; }
+    .tool-btn.danger { color: #e11d48; }
+    .tool-btn.disabled { opacity: 0.4; pointer-events: none; }
+    
+    .export-zone { padding: 12px; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); }
+    .export-btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; text-align: center; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; }
+    .export-btn:hover { background: var(--accent-hover); }
+    .export-btn.disabled { background: var(--border); color: var(--text-muted); pointer-events: none; }
+    .export-btn.outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .export-btn.outline:hover { background: rgba(37, 99, 235, 0.1); }
+
+    /* Workspace */
+    .workspace { flex: 1; background: var(--bg-dark); overflow-y: auto; padding: 30px; position: relative; transition: background 0.2s; }
+    .grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 24px; padding-bottom: 60px; }
+    .page-card { 
+        background: var(--bg-panel); padding: 10px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+        display: flex; flex-direction: column; cursor: grab; border: 2px solid transparent; transition: transform 0.1s, border 0.1s; position: relative;
+    }
+    [data-theme="light"] .page-card { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    .page-card:active { cursor: grabbing; transform: scale(0.98); }
+    .page-card.selected { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 1px; }
+    .page-card.suspect { border-color: #d97706; }
+    .page-card.drag-over { opacity: 0.4; border: 2px dashed var(--accent); }
+    
+    .canvas-wrapper { height: 230px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #e5e5e5; pointer-events: none; border-radius: 4px; position: relative; }
+    .canvas-wrapper canvas { max-width: 100%; max-height: 100%; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+    .watermark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.3; transform: rotate(-45deg); font-size: 24px; font-weight: bold; color: #555; text-align: center; overflow: hidden; white-space: nowrap; }
+    
+    .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; font-weight: 700; }
+    .empty-state { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--text-muted); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    
+    /* Right Sidebar */
+    .sidebar-right { width: 280px; background: var(--bg-panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 2; transition: background 0.2s; }
+    .prop-section { padding: 16px; border-bottom: 1px solid var(--border); }
+    .prop-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+    .prop-label { color: var(--text-muted); }
+    .empty-props { padding: 30px 20px; text-align: center; color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+    .action-row { display: flex; gap: 8px; margin-top: 10px; }
+    .action-btn { flex: 1; background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border); padding: 8px 0; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: var(--accent); }
+
+    /* Status Bar */
+    .status-bar { height: 28px; background: var(--accent); color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 12px; z-index: 10; }
+    
+    /* Context Menu */
+    .context-menu { position: absolute; background: var(--bg-panel); border: 1px solid var(--border); box-shadow: 2px 2px 15px rgba(0,0,0,0.3); z-index: 1000; padding: 6px 0; border-radius: 6px; display: none; min-width: 180px; }
+    .menu-item { padding: 8px 20px; font-size: 13px; cursor: pointer; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
+    .menu-item:hover { background: var(--accent); color: white; }
+    .menu-item i { width: 16px; height: 16px; margin-right: 10px; }
+    .menu-shortcut { color: var(--text-muted); font-size: 11px; }
+    .menu-item:hover .menu-shortcut { color: rgba(255,255,255,0.7); }
+    
+    /* Detail View Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 2000; display: none; flex-direction: column; }
+    .modal-toolbar { position: absolute; top: 0; left: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: linear-gradient(rgba(0,0,0,0.8), transparent); color: white; z-index: 2010; pointer-events: none; }
+    .modal-toolbar * { pointer-events: auto; }
+    .modal-content { width: 100%; height: 100%; overflow: auto; text-align: center; padding: 70px 20px 40px 20px; position: relative; user-select: none; }
+    .modal-content canvas { max-width: 100%; box-shadow: 0 0 20px rgba(0,0,0,0.5); background: white; pointer-events: none; }
+    
+    .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); border: none; color: white; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 2010;}
+    .nav-btn:hover { background: rgba(255,255,255,0.4); }
+    .nav-btn.prev { left: 20px; }
+    .nav-btn.next { right: 20px; }
+
+    .toggle-btn { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; transition: 0.2s; }
+    .toggle-btn:hover { background: rgba(255,255,255,0.2); }
+    .toggle-btn.active { background: #e11d48; border-color: #be123c; font-weight: bold; }
+    .toggle-btn.active-blue { background: var(--accent); border-color: var(--accent-hover); font-weight: bold; }
+    
+    /* Overlays (Redaction, Text, Image) */
+    .redact-box { position: absolute; background: #000; border: 1px solid #333; z-index: 2005; }
+    .redact-box.drawing { background: rgba(0,0,0,0.5); border: 1px dashed #fff; }
+    .overlay-del { position: absolute; top: -10px; right: -10px; width: 20px; height: 20px; background: #e11d48; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; font-weight: bold; z-index: 10;}
+    .redact-box:hover .overlay-del { display: flex; }
+    .mini-redact { position: absolute; background: #000; }
+
+    .overlay-item { position: absolute; border: 1px dashed transparent; z-index: 2006; cursor: move; display: flex; }
+    .overlay-item:hover { border-color: var(--accent); background: rgba(0, 122, 204, 0.05); }
+    .overlay-item:hover .overlay-del { display: flex; }
+    
+    .overlay-text { background: transparent; border: none; outline: none; color: #000; font-size: 16px; font-weight: bold; font-family: sans-serif; padding: 4px; min-width: 50px; cursor: text; }
+    
+    .overlay-img-wrapper { width: 100%; height: 100%; position: relative; }
+    .overlay-img-wrapper img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+    .resize-handle { position: absolute; right: -5px; bottom: -5px; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; cursor: nwse-resize; display: none; z-index: 10; border: 2px solid white;}
+    .overlay-item:hover .resize-handle { display: block; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(136, 136, 136, 0.4); border-radius: 6px; border: 3px solid transparent; background-clip: padding-box; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(136, 136, 136, 0.6); border: 3px solid transparent; background-clip: padding-box; }
+    
+    input[type="file"] { display: none; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>PDF 工具箱</h1>
-  <p class="sub">v5 Enterprise Review Edition｜自動偵測後先人工確認，避免誤刪重要頁面。</p>
-  <div class="grid">
-    <section class="card">
-      <div class="hd"><h2>1. 選擇 PDF</h2><button class="small" id="clearBtn">清除</button></div>
-      <div class="bd">
-        <input id="fileInput" class="hidden" type="file" accept="application/pdf">
-        <div id="drop" class="drop">
-          <div><div class="icon">📄</div><div class="fileName">點我選擇 PDF</div><div class="meta">檔案不會上傳外網，於瀏覽器本機處理。</div></div>
-        </div>
-        <div class="stats">
-          <div class="stat"><div class="num" id="pageCount">0</div><div class="lab">總頁數</div></div>
-          <div class="stat"><div class="num" id="suspectCount">0</div><div class="lab">疑似空白</div></div>
-          <div class="stat"><div class="num" id="checkedCount">0</div><div class="lab">勾選刪除</div></div>
-        </div>
-        <div class="bar"><i id="progress"></i></div>
-        <div id="msg" class="notice info">請先上傳 PDF，再按「偵測疑似空白頁」。</div>
-        <button class="btn primary" id="detectBtn" disabled>① 偵測疑似空白頁</button>
-        <button class="btn danger" id="deleteBtn" disabled>② 刪除勾選頁面</button>
-        <button class="btn success" id="downloadBtn" disabled>③ 下載目前 PDF</button>
-        <div class="footerOps">
-          <button class="small" id="extractBtn" disabled>只保留未勾選頁</button>
-          <button class="small" id="toggleDebugBtn">顯示偵錯資訊</button>
-        </div>
-        <div id="debug" class="debug hidden"></div>
-      </div>
-    </section>
 
-    <section class="card">
-      <div class="hd"><h2>2. 人工確認疑似頁面</h2><span class="meta">點頁碼看大圖，勾選才會刪除</span></div>
-      <div class="reviewLayout">
-        <div class="listPane">
-          <div class="toolbar">
-            <button class="small" id="selectAllSuspects">全選疑似頁</button>
-            <button class="small" id="clearSelection">取消勾選</button>
-          </div>
-          <div id="pageList" class="pageList"><div class="empty">尚未偵測。偵測後只會列出「疑似空白頁」，不會顯示全部頁面。</div></div>
-        </div>
-        <div class="previewPane">
-          <div class="previewTitle"><b id="previewTitle">頁面預覽</b><span class="meta" id="previewMeta">尚未選擇頁面</span></div>
-          <div id="previewBox" class="previewBox"><div class="hint">偵測完成後，點左側疑似頁面即可查看大圖。<br>若系統誤判，取消勾選即可保留該頁。</div></div>
-        </div>
-      </div>
-    </section>
-  </div>
+<div class="header">
+    <div class="header-left">
+        <i data-lucide="layers" style="color: var(--accent);"></i> PDF Studio Pro V5
+    </div>
+    <div class="header-right">
+        <button class="icon-btn" id="undoBtn" title="復原 (Ctrl+Z)" disabled><i data-lucide="undo"></i></button>
+        <button class="icon-btn" id="redoBtn" title="重做 (Ctrl+Y)" disabled><i data-lucide="redo"></i></button>
+        <div style="width:1px; height:20px; background:var(--border); margin: 0 5px;"></div>
+        <button class="icon-btn" id="themeToggleBtn" title="切換亮白/暗黑模式"><i data-lucide="sun"></i></button>
+    </div>
 </div>
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="main-container">
+    <!-- Left Sidebar -->
+    <div class="sidebar-left">
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="搜尋 PDF 內容並過濾...">
+            </div>
+        </div>
+        
+        <div class="panel-title">檔案與編輯</div>
+        <div class="tool-list">
+            <div class="tool-btn primary" id="addPdfBtn">
+                <i data-lucide="file-plus"></i> 加入 / 合併 PDF
+            </div>
+            <div class="tool-btn" id="detectBtn">
+                <i data-lucide="search"></i> 偵測空白頁
+            </div>
+            <div class="tool-btn" id="watermarkBtn">
+                <i data-lucide="pen-tool"></i> 設定浮水印
+            </div>
+            <div class="tool-btn" id="selectAllBtn">
+                <i data-lucide="check-square"></i> 全選過濾頁 (Ctrl+A)
+            </div>
+            <div class="tool-btn" id="clearSelBtn">
+                <i data-lucide="square"></i> 取消選取 (Esc)
+            </div>
+        </div>
+        <div class="export-zone">
+            <div class="export-btn disabled" id="exportAllBtn" title="將所有頁面合併成一個檔案">
+                <i data-lucide="download"></i> 匯出全部頁面
+            </div>
+            <div class="export-btn outline disabled" id="exportSelectedBtn" title="只將勾選的頁面另存新檔">
+                <i data-lucide="scissors"></i> 匯出選取頁面 (分割)
+            </div>
+        </div>
+        <input type="file" id="fileInput" accept="application/pdf" multiple>
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
+
+    <!-- Workspace -->
+    <div class="workspace" id="workspace">
+        <div class="empty-state" id="emptyState">
+            <i data-lucide="file-up" style="width: 64px; height: 64px; color: var(--border);"></i>
+            <h2>尚未載入檔案</h2>
+            <p>請點選左側「加入 / 合併 PDF」或將檔案拖曳至此處。</p>
+        </div>
+        <div class="grid-view" id="grid"></div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="sidebar-right">
+        <div class="panel-title">屬性與動作</div>
+        <div id="propertiesContent">
+            <div class="empty-props">請在中央工作區點選頁面以檢視屬性。</div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Bar -->
+<div class="status-bar">
+    <div id="statusLeft">準備就緒</div>
+    <div id="statusRight">總頁數: 0 | 選取: 0</div>
+</div>
+
+<!-- Context Menu -->
+<div class="context-menu" id="contextMenu">
+    <div class="menu-item" onclick="rotateLeft()">
+        <div style="display:flex;align-items:center;"><i data-lucide="rotate-ccw"></i> 左轉 90°</div>
+        <span class="menu-shortcut"></span>
+    </div>
+    <div class="menu-item" onclick="rotateRight()">
+        <div style="display:flex;align-items:center;"><i data-lucide="rotate-cw"></i> 右轉 90°</div>
+        <span class="menu-shortcut"></span>
+    </div>
+    <div class="menu-item" onclick="openDetailView()">
+        <div style="display:flex;align-items:center;"><i data-lucide="zoom-in"></i> 放大預覽 / 遮蔽</div>
+        <span class="menu-shortcut">雙擊</span>
+    </div>
+    <div style="height:1px; background:var(--border); margin:4px 0;"></div>
+    <div class="menu-item" onclick="insertBlankPage()">
+        <div style="display:flex;align-items:center;"><i data-lucide="file"></i> 在後方插入空白頁</div>
+        <span class="menu-shortcut"></span>
+    </div>
+    <div style="height:1px; background:var(--border); margin:4px 0;"></div>
+    <div class="menu-item" style="color:#e11d48" onclick="deleteSelected()">
+        <div style="display:flex;align-items:center;"><i data-lucide="trash"></i> 刪除勾選頁面</div>
+        <span class="menu-shortcut">Del</span>
+    </div>
+</div>
+
+<!-- Detail View Modal -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal-toolbar">
+        <div style="display:flex; align-items:center; gap:12px">
+            <div style="font-weight:bold; margin-right: 16px" id="detailTitle">頁面預覽</div>
+            
+            <button class="toggle-btn" id="redactModeBtn" title="拖曳繪製黑色方塊"><i data-lucide="shield-alert" style="width:16px"></i> 遮蔽</button>
+            <button class="toggle-btn" id="addTextBtn" title="點擊畫面任意處加入文字"><i data-lucide="type" style="width:16px"></i> 文字</button>
+            <button class="toggle-btn" onclick="document.getElementById('imageInput').click()" title="插入圖片或去背簽名"><i data-lucide="image" style="width:16px"></i> 圖片/簽章</button>
+        </div>
+        <button class="icon-btn" style="color:white" id="closeModalBtn"><i data-lucide="x"></i></button>
+    </div>
+    <button class="nav-btn prev" id="detailPrevBtn"><i data-lucide="chevron-left"></i></button>
+    <div class="modal-content" id="detailContent"></div>
+    <button class="nav-btn next" id="detailNextBtn"><i data-lucide="chevron-right"></i></button>
+</div>
+
 <script>
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const logLines=[]; const log=(s)=>{logLines.push(`[${new Date().toLocaleTimeString()}] ${s}`); $('debug').textContent=logLines.join('\n');};
-let file=null, originalBytes=null, currentBytes=null, pdfDoc=null, suspectPages=[], selected=new Set(), activePage=null;
-const els=['fileInput','drop','clearBtn','pageCount','suspectCount','checkedCount','progress','msg','detectBtn','deleteBtn','downloadBtn','extractBtn','toggleDebugBtn','debug','pageList','previewBox','previewTitle','previewMeta','selectAllSuspects','clearSelection'].reduce((a,id)=>(a[id]=$(id),a),{});
-function setMsg(text,type='info'){els.msg.className='notice '+type; els.msg.textContent=text;}
-function setProgress(p){els.progress.style.width=Math.max(0,Math.min(100,p))+'%';}
-function fmt(bytes){return bytes<1024*1024?(bytes/1024).toFixed(1)+' KB':(bytes/1024/1024).toFixed(2)+' MB';}
-function updateStats(){els.pageCount.textContent=pdfDoc?pdfDoc.numPages:0; els.suspectCount.textContent=suspectPages.length; els.checkedCount.textContent=selected.size; els.deleteBtn.disabled=selected.size===0; els.extractBtn.disabled=!pdfDoc||selected.size===0; els.downloadBtn.disabled=!currentBytes;}
-function ensureLibs(){ if(!window.pdfjsLib) throw new Error('PDF.js 載入失敗，可能是公司網路擋住 CDN。'); if(!window.PDFLib) throw new Error('pdf-lib 載入失敗，可能是公司網路擋住 CDN。'); pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
-async function loadFile(f){
- try{ ensureLibs(); file=f; originalBytes=await f.arrayBuffer(); currentBytes=originalBytes.slice(0); pdfDoc=await pdfjsLib.getDocument({data:originalBytes.slice(0)}).promise; suspectPages=[]; selected.clear(); activePage=null; setProgress(100); setMsg(`載入完成：${f.name}（${fmt(f.size)}），共 ${pdfDoc.numPages} 頁。請按偵測。`,'ok'); els.detectBtn.disabled=false; renderList(); clearPreview(); updateStats(); log(`PDF loaded: ${f.name}, pages=${pdfDoc.numPages}, size=${fmt(f.size)}`); }
- catch(e){ console.error(e); setMsg('載入失敗：'+e.message,'err'); log('Load error: '+e.message); }
+const els = {
+    fileInput: $('fileInput'), grid: $('grid'), workspace: $('workspace'),
+    emptyState: $('emptyState'), ctxMenu: $('contextMenu'),
+    progressBar: $('progressBar'), statusLeft: $('statusLeft'), statusRight: $('statusRight'),
+    addPdfBtn: $('addPdfBtn'), detectBtn: $('detectBtn'), selectAllBtn: $('selectAllBtn'),
+    clearSelBtn: $('clearSelBtn'), exportAllBtn: $('exportAllBtn'), exportSelectedBtn: $('exportSelectedBtn'),
+    propertiesContent: $('propertiesContent'), themeToggleBtn: $('themeToggleBtn'),
+    undoBtn: $('undoBtn'), redoBtn: $('redoBtn'), watermarkBtn: $('watermarkBtn'),
+    detailModal: $('detailModal'), detailContent: $('detailContent'), detailTitle: $('detailTitle'),
+    closeModalBtn: $('closeModalBtn'), detailPrevBtn: $('detailPrevBtn'), detailNextBtn: $('detailNextBtn'),
+    redactModeBtn: $('redactModeBtn'), addTextBtn: $('addTextBtn'),
+    searchInput: $('searchInput'), imageInput: $('imageInput')
+};
+
+let loadedPDFs = []; 
+let pagesState = []; 
+let draggedIndex = null;
+let lastSelectedIndex = -1;
+let watermarkText = '';
+let currentDetailIndex = -1;
+
+let isRedactMode = false;
+let isTextMode = false;
+
+// History for Undo/Redo
+let historyStack = [];
+let historyIndex = -1;
+
+function saveHistory() {
+    if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+    }
+    const stateSnapshot = pagesState.map(p => ({
+        ...p,
+        redactions: JSON.parse(JSON.stringify(p.redactions || [])),
+        texts: JSON.parse(JSON.stringify(p.texts || [])),
+        images: JSON.parse(JSON.stringify(p.images || []))
+    }));
+    historyStack.push(stateSnapshot);
+    historyIndex++;
+    updateHistoryButtons();
 }
-async function renderPageCanvas(pageNo, scale=1.35){
- const page=await pdfDoc.getPage(pageNo); const viewport=page.getViewport({scale}); const canvas=document.createElement('canvas'); const ctx=canvas.getContext('2d',{willReadFrequently:true}); canvas.width=Math.floor(viewport.width); canvas.height=Math.floor(viewport.height); await page.render({canvasContext:ctx,viewport}).promise; return canvas;
+
+function updateHistoryButtons() {
+    els.undoBtn.disabled = historyIndex <= 0;
+    els.redoBtn.disabled = historyIndex >= historyStack.length - 1;
+    els.undoBtn.style.opacity = els.undoBtn.disabled ? 0.3 : 1;
+    els.redoBtn.style.opacity = els.redoBtn.disabled ? 0.3 : 1;
 }
-async function detect(){
- if(!pdfDoc)return; suspectPages=[]; selected.clear(); setMsg('偵測中，請稍候...','info'); setProgress(0); renderList(); clearPreview(); log('Start detecting blank pages');
- for(let i=1;i<=pdfDoc.numPages;i++){
-   try{
-    const canvas=await renderPageCanvas(i,0.42); const ctx=canvas.getContext('2d',{willReadFrequently:true}); const img=ctx.getImageData(0,0,canvas.width,canvas.height).data; let nonWhite=0,total=canvas.width*canvas.height;
-    for(let p=0;p<img.length;p+=4){ const r=img[p],g=img[p+1],b=img[p+2],a=img[p+3]; if(a>20 && !(r>245&&g>245&&b>245)) nonWhite++; }
-    const ratio=nonWhite/total; const suspicious=ratio<0.006; // less than 0.6% non-white pixels
-    if(suspicious){suspectPages.push({page:i,ratio}); selected.add(i);} log(`page ${i}: nonWhiteRatio=${(ratio*100).toFixed(3)}% ${suspicious?'SUSPECT':''}`);
-   }catch(e){ log(`page ${i}: detect error ${e.message}`); }
-   setProgress((i/pdfDoc.numPages)*100); updateStats();
- }
- renderList(); updateStats();
- if(suspectPages.length){ setMsg(`偵測完成：找到 ${suspectPages.length} 頁疑似空白頁。請逐頁預覽確認，勾選的頁面才會刪除。`,'ok'); showPreview(suspectPages[0].page); }
- else setMsg('偵測完成：沒有找到疑似空白頁。','ok');
+
+window.undo = () => {
+    if (historyIndex > 0) {
+        historyIndex--;
+        pagesState = [...historyStack[historyIndex]].map(p => ({
+            ...p,
+            redactions: JSON.parse(JSON.stringify(p.redactions || [])),
+            texts: JSON.parse(JSON.stringify(p.texts || [])),
+            images: JSON.parse(JSON.stringify(p.images || []))
+        }));
+        renderGrid();
+        if (els.detailModal.style.display === 'flex') renderDetailView();
+        setStatus('已復原', 100);
+        updateHistoryButtons();
+    }
+};
+
+window.redo = () => {
+    if (historyIndex < historyStack.length - 1) {
+        historyIndex++;
+        pagesState = [...historyStack[historyIndex]].map(p => ({
+            ...p,
+            redactions: JSON.parse(JSON.stringify(p.redactions || [])),
+            texts: JSON.parse(JSON.stringify(p.texts || [])),
+            images: JSON.parse(JSON.stringify(p.images || []))
+        }));
+        renderGrid();
+        if (els.detailModal.style.display === 'flex') renderDetailView();
+        setStatus('已重做', 100);
+        updateHistoryButtons();
+    }
+};
+
+els.undoBtn.onclick = window.undo;
+els.redoBtn.onclick = window.redo;
+
+// Theme Toggle
+let isLight = false;
+els.themeToggleBtn.onclick = () => {
+    isLight = !isLight;
+    if (isLight) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        els.themeToggleBtn.innerHTML = '<i data-lucide="moon"></i>';
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+        els.themeToggleBtn.innerHTML = '<i data-lucide="sun"></i>';
+    }
+    lucide.createIcons();
+};
+
+function setStatus(text, progress = null) {
+    els.statusLeft.textContent = text;
+    if (progress !== null) {
+        els.progressBar.style.width = Math.max(0, Math.min(100, progress)) + '%';
+        if(progress >= 100) setTimeout(()=>els.progressBar.style.width = '0%', 500);
+    }
 }
-function renderList(){
- const box=els.pageList; box.innerHTML='';
- if(!suspectPages.length){ box.innerHTML='<div class="empty">目前沒有疑似空白頁。<br>若尚未偵測，請先按左側偵測按鈕。</div>'; return; }
- suspectPages.forEach(x=>{ const div=document.createElement('div'); div.className='item blank'+(activePage===x.page?' active':''); div.innerHTML=`<input type="checkbox" ${selected.has(x.page)?'checked':''} aria-label="勾選第${x.page}頁"><div><div class="title">第 ${x.page} 頁</div><div class="desc">系統判斷：疑似空白頁</div><div class="score">內容像素約 ${(x.ratio*100).toFixed(3)}%</div></div>`; div.onclick=(ev)=>{ if(ev.target.tagName==='INPUT'){ if(ev.target.checked)selected.add(x.page); else selected.delete(x.page); updateStats(); return; } showPreview(x.page); }; div.querySelector('input').onchange=(ev)=>{ if(ev.target.checked)selected.add(x.page); else selected.delete(x.page); updateStats(); }; box.appendChild(div); });
+
+function updateStats() {
+    const visiblePages = pagesState.filter(p => !p.hiddenBySearch);
+    const hasPages = visiblePages.length > 0;
+    const selectedCount = visiblePages.filter(p => p.selected).length;
+    els.emptyState.style.display = (pagesState.length > 0 && hasPages) ? 'none' : (pagesState.length === 0 ? 'flex' : 'none');
+    
+    if (pagesState.length > 0) {
+        els.exportAllBtn.classList.remove('disabled');
+        els.detectBtn.classList.remove('disabled');
+        els.selectAllBtn.classList.remove('disabled');
+        els.watermarkBtn.classList.remove('disabled');
+    } else {
+        els.exportAllBtn.classList.add('disabled');
+        els.detectBtn.classList.add('disabled');
+        els.selectAllBtn.classList.add('disabled');
+        els.watermarkBtn.classList.add('disabled');
+    }
+    
+    if (selectedCount > 0) {
+        els.clearSelBtn.classList.remove('disabled');
+        els.exportSelectedBtn.classList.remove('disabled');
+    } else {
+        els.clearSelBtn.classList.add('disabled');
+        els.exportSelectedBtn.classList.add('disabled');
+    }
+    
+    els.statusRight.textContent = `顯示頁數: ${visiblePages.length}/${pagesState.length} | 選取: ${selectedCount}`;
+    
+    // Update right panel
+    if (selectedCount === 0) {
+        els.propertiesContent.innerHTML = '<div class="empty-props">請在中央工作區點選頁面以檢視屬性與操作。</div>';
+    } else if (selectedCount === 1) {
+        const p = visiblePages.find(p => p.selected);
+        const overCount = (p.redactions?.length||0) + (p.texts?.length||0) + (p.images?.length||0);
+        
+        els.propertiesContent.innerHTML = `
+            <div class="prop-section">
+                <div class="prop-row"><span class="prop-label">檔案來源</span> <span style="text-align:right;word-break:break-all;max-width:140px;">${p.isBlank ? '自動生成' : p.originalName}</span></div>
+                ${!p.isBlank ? `<div class="prop-row"><span class="prop-label">原始頁碼</span> <span>第 ${p.pageIndex + 1} 頁</span></div>` : ''}
+                <div class="prop-row"><span class="prop-label">旋轉角度</span> <span>${p.rotation}°</span></div>
+                ${p.suspect ? '<div class="prop-row"><span class="prop-label" style="color:#d97706">警告狀態</span> <span style="color:#d97706">疑似空白頁</span></div>' : ''}
+                ${overCount > 0 ? '<div class="prop-row"><span class="prop-label">編輯物件</span> <span style="color:var(--accent)">已加入 '+overCount+' 項</span></div>' : ''}
+            </div>
+            <div class="prop-section action-row">
+                <button class="action-btn" onclick="window.rotateLeft()" title="左轉"><i data-lucide="rotate-ccw" style="width:18px"></i></button>
+                <button class="action-btn" onclick="window.rotateRight()" title="右轉"><i data-lucide="rotate-cw" style="width:18px"></i></button>
+                <button class="action-btn" style="color:#e11d48;" onclick="window.deleteSelected()" title="刪除"><i data-lucide="trash" style="width:18px"></i></button>
+            </div>
+            <div class="prop-section">
+                <button class="action-btn" style="width:100%" onclick="window.openDetailView()">🔍 進入進階編輯預覽</button>
+            </div>
+        `;
+    } else {
+        els.propertiesContent.innerHTML = `
+            <div class="prop-section">
+                <div class="prop-row"><span class="prop-label">已選取</span> <span>${selectedCount} 頁</span></div>
+                <div class="prop-row"><span class="prop-label">動作</span> <span style="color:var(--text-muted)">套用至所有選取頁</span></div>
+            </div>
+            <div class="prop-section action-row">
+                <button class="action-btn" onclick="window.rotateLeft()"><i data-lucide="rotate-ccw" style="width:18px"></i></button>
+                <button class="action-btn" onclick="window.rotateRight()"><i data-lucide="rotate-cw" style="width:18px"></i></button>
+                <button class="action-btn" style="color:#e11d48;" onclick="window.deleteSelected()"><i data-lucide="trash" style="width:18px"></i></button>
+            </div>
+        `;
+    }
+    lucide.createIcons();
 }
-function clearPreview(){els.previewTitle.textContent='頁面預覽'; els.previewMeta.textContent='尚未選擇頁面'; els.previewBox.innerHTML='<div class="hint">偵測完成後，點左側疑似頁面即可查看大圖。<br>若系統誤判，取消勾選即可保留該頁。</div>';}
-async function showPreview(pageNo){
- try{ activePage=pageNo; renderList(); els.previewTitle.textContent=`第 ${pageNo} 頁預覽`; els.previewMeta.textContent='產生大圖中...'; els.previewBox.innerHTML=''; const canvas=await renderPageCanvas(pageNo,1.45); els.previewBox.appendChild(canvas); els.previewMeta.textContent=`${canvas.width} × ${canvas.height}`; log(`preview page ${pageNo}: ${canvas.width}x${canvas.height}`); }
- catch(e){ els.previewBox.innerHTML='<div class="hint">預覽失敗：'+e.message+'</div>'; els.previewMeta.textContent='預覽失敗'; log('Preview error: '+e.message); }
+
+function ensureLibs(){ 
+    if(!window.pdfjsLib) throw new Error('PDF.js 未載入'); 
+    if(!window.PDFLib) throw new Error('pdf-lib 未載入'); 
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; 
 }
-async function exportKeeping(keepPages, filename){
- const src=await PDFLib.PDFDocument.load(currentBytes.slice(0)); const out=await PDFLib.PDFDocument.create(); const copied=await out.copyPages(src, keepPages.map(n=>n-1)); copied.forEach(p=>out.addPage(p)); const bytes=await out.save(); currentBytes=bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset+bytes.byteLength); downloadBytes(currentBytes, filename); pdfDoc=await pdfjsLib.getDocument({data:currentBytes.slice(0)}).promise; suspectPages=[]; selected.clear(); activePage=null; renderList(); clearPreview(); updateStats(); setMsg(`處理完成，已產生 ${filename}。目前 PDF 共 ${pdfDoc.numPages} 頁。`,'ok'); }
-function allPages(){return Array.from({length:pdfDoc.numPages},(_,i)=>i+1)}
-async function deleteSelected(){ if(!selected.size)return; if(!confirm(`確定刪除 ${selected.size} 頁？\n勾選頁面：${[...selected].sort((a,b)=>a-b).join(', ')}`))return; const keep=allPages().filter(n=>!selected.has(n)); await exportKeeping(keep, makeName('_刪除空白頁.pdf')); }
-async function extractUnselected(){ const keep=allPages().filter(n=>!selected.has(n)); await exportKeeping(keep, makeName('_保留版.pdf')); }
-function makeName(suffix){ const base=(file?.name||'output.pdf').replace(/\.pdf$/i,''); return base+suffix; }
-function downloadBytes(bytes,name){ const blob=new Blob([bytes],{type:'application/pdf'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); }
-function reset(){ file=null; originalBytes=null; currentBytes=null; pdfDoc=null; suspectPages=[]; selected.clear(); activePage=null; els.fileInput.value=''; els.detectBtn.disabled=true; els.deleteBtn.disabled=true; els.downloadBtn.disabled=true; els.extractBtn.disabled=true; setProgress(0); setMsg('請先上傳 PDF，再按「偵測疑似空白頁」。','info'); renderList(); clearPreview(); updateStats(); log('Reset'); }
-els.drop.onclick=()=>els.fileInput.click(); els.fileInput.onchange=e=>{if(e.target.files[0])loadFile(e.target.files[0]);};
-els.clearBtn.onclick=reset; els.detectBtn.onclick=detect; els.deleteBtn.onclick=deleteSelected; els.extractBtn.onclick=extractUnselected; els.downloadBtn.onclick=()=>currentBytes&&downloadBytes(currentBytes,makeName('_目前版本.pdf'));
-els.toggleDebugBtn.onclick=()=>els.debug.classList.toggle('hidden'); els.selectAllSuspects.onclick=()=>{suspectPages.forEach(x=>selected.add(x.page)); renderList(); updateStats();}; els.clearSelection.onclick=()=>{selected.clear(); renderList(); updateStats();};
-els.drop.ondragover=e=>{e.preventDefault(); els.drop.style.borderColor='#2563eb';}; els.drop.ondragleave=()=>els.drop.style.borderColor=''; els.drop.ondrop=e=>{e.preventDefault(); els.drop.style.borderColor=''; if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);};
-try{ensureLibs(); log('Libraries loaded');}catch(e){setMsg(e.message,'err');log(e.message)}
+
+async function handleFiles(files){
+    if(!files.length) return;
+    try{ensureLibs();}catch(e){setStatus(e.message, 0);return;}
+    setStatus('正在載入檔案...', 10);
+    saveHistory(); 
+    
+    for(let i=0; i<files.length; i++){
+        const f = files[i];
+        if(f.type !== 'application/pdf') continue;
+        try {
+            const bytes = await f.arrayBuffer();
+            const pdfDoc = await pdfjsLib.getDocument({data: bytes.slice(0)}).promise;
+            const pdfId = 'pdf_'+Date.now();
+            loadedPDFs.push({id: pdfId, bytes, name: f.name});
+            
+            for(let p=1; p<=pdfDoc.numPages; p++){
+                const pageInfo = await pdfDoc.getPage(p);
+                const viewport = pageInfo.getViewport({scale: 1});
+                pagesState.push({
+                    id: 'p_'+Date.now()+'_'+p,
+                    pdfId: pdfId,
+                    pageIndex: p - 1,
+                    originalName: f.name,
+                    rotation: 0,
+                    selected: false,
+                    suspect: false,
+                    isBlank: false,
+                    hiddenBySearch: false,
+                    textContent: null, // for search cache
+                    redactions: [],
+                    texts: [],
+                    images: [],
+                    pdfPage: pageInfo,
+                    canvas: null,
+                    width: viewport.width,
+                    height: viewport.height
+                });
+            }
+        } catch(e) {
+            console.error(e);
+            setStatus(`載入 ${f.name} 失敗`, null);
+        }
+        setStatus('處理中...', 10 + (i+1)/files.length * 40);
+    }
+    
+    saveHistory();
+    renderGrid();
+    setStatus('正在產生縮圖...', 50);
+    await lazyRenderCanvases();
+    setStatus('就緒', 100);
+}
+
+// Generate a blank canvas
+function createBlankCanvas(width, height, scale) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return canvas;
+}
+
+async function renderPageCanvas(page, scale=0.4){
+    if (page.isBlank) {
+        return createBlankCanvas(page.width, page.height, scale);
+    }
+    const viewport = page.pdfPage.getViewport({scale});
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', {willReadFrequently: true});
+    canvas.width = Math.floor(viewport.width);
+    canvas.height = Math.floor(viewport.height);
+    await page.pdfPage.render({canvasContext: ctx, viewport}).promise;
+    return canvas;
+}
+
+async function lazyRenderCanvases(){
+    for(let i=0; i<pagesState.length; i++){
+        const page = pagesState[i];
+        if(page.canvas) continue;
+        page.canvas = await renderPageCanvas(page, 0.4);
+        const wrapper = $('canvas-wrap-'+page.id);
+        if(wrapper){
+            wrapper.querySelector('canvas')?.remove();
+            const loadingSpan = wrapper.querySelector('span');
+            if(loadingSpan) loadingSpan.remove();
+            wrapper.insertBefore(page.canvas, wrapper.firstChild);
+            applyRotation(page);
+        }
+        if (i%5===0) setStatus('產生縮圖中...', 50 + ((i+1)/pagesState.length) * 50);
+    }
+}
+
+function applyRotation(page){
+    if(page.canvas) {
+        page.canvas.style.transform = `rotate(${page.rotation}deg)`;
+        if(page.rotation % 180 !== 0) {
+            page.canvas.style.transform += ` scale(0.65)`;
+        }
+    }
+}
+
+function renderGrid(){
+    els.grid.innerHTML = '';
+    pagesState.forEach((page, index) => {
+        if (page.hiddenBySearch) return; // Search Filter
+        
+        const card = document.createElement('div');
+        card.className = `page-card ${page.selected?'selected':''} ${page.suspect?'suspect':''}`;
+        card.draggable = true;
+        card.dataset.id = page.id;
+        
+        // Drag & Drop
+        card.ondragstart = (e) => {
+            draggedIndex = index;
+            e.dataTransfer.effectAllowed = 'move';
+            setTimeout(()=>card.style.opacity = '0.4', 0);
+        };
+        card.ondragend = () => { card.style.opacity = '1'; els.grid.querySelectorAll('.page-card').forEach(c=>c.classList.remove('drag-over')); };
+        card.ondragover = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
+        card.ondragenter = () => card.classList.add('drag-over');
+        card.ondragleave = () => card.classList.remove('drag-over');
+        card.ondrop = (e) => {
+            e.preventDefault();
+            card.classList.remove('drag-over');
+            if(draggedIndex === null || draggedIndex === index) return;
+            saveHistory();
+            const item = pagesState.splice(draggedIndex, 1)[0];
+            pagesState.splice(index, 0, item);
+            saveHistory();
+            renderGrid();
+        };
+        
+        // Click selection
+        card.onclick = (e) => {
+            if (e.shiftKey && lastSelectedIndex !== -1) {
+                const start = Math.min(index, lastSelectedIndex);
+                const end = Math.max(index, lastSelectedIndex);
+                for(let i=start; i<=end; i++) {
+                    if(!pagesState[i].hiddenBySearch) pagesState[i].selected = true;
+                }
+            } else if (e.ctrlKey || e.metaKey) {
+                page.selected = !page.selected;
+                lastSelectedIndex = index;
+            } else {
+                pagesState.forEach(p => p.selected = false);
+                page.selected = true;
+                lastSelectedIndex = index;
+            }
+            renderGrid();
+        };
+
+        // Double click for detail view
+        card.ondblclick = () => {
+            pagesState.forEach(p => p.selected = false);
+            page.selected = true;
+            renderGrid();
+            window.openDetailView();
+        };
+        
+        const wrapper = document.createElement('div');
+        wrapper.id = 'canvas-wrap-'+page.id;
+        wrapper.className = 'canvas-wrapper';
+        if(page.canvas){
+            wrapper.appendChild(page.canvas);
+            setTimeout(()=>applyRotation(page), 0);
+        } else {
+            wrapper.innerHTML = '<span style="color:var(--text-muted);font-size:12px;">載入中...</span>';
+        }
+
+        // Draw mini redactions and indicators on thumbnail
+        const rotContainer = document.createElement('div');
+        rotContainer.style.position = 'absolute';
+        rotContainer.style.width = '100%';
+        rotContainer.style.height = '100%';
+        rotContainer.style.top = '0';
+        rotContainer.style.left = '0';
+        rotContainer.style.transform = `rotate(${page.rotation}deg)`;
+        if(page.rotation % 180 !== 0) rotContainer.style.transform += ` scale(0.65)`;
+        rotContainer.style.pointerEvents = 'none';
+        
+        if (page.redactions && page.redactions.length > 0) {
+            page.redactions.forEach(r => {
+                const b = document.createElement('div');
+                b.className = 'mini-redact';
+                b.style.left = (r.rx * 100) + '%';
+                b.style.top = (r.ry * 100) + '%';
+                b.style.width = (r.rw * 100) + '%';
+                b.style.height = (r.rh * 100) + '%';
+                rotContainer.appendChild(b);
+            });
+        }
+        
+        if (page.texts && page.texts.length > 0) {
+            page.texts.forEach(t => {
+                const b = document.createElement('div');
+                b.style.position = 'absolute';
+                b.style.left = (t.rx * 100) + '%';
+                b.style.top = (t.ry * 100) + '%';
+                b.style.fontSize = '8px';
+                b.style.color = 'var(--accent)';
+                b.style.fontWeight = 'bold';
+                b.textContent = 'T';
+                rotContainer.appendChild(b);
+            });
+        }
+        
+        if (page.images && page.images.length > 0) {
+            page.images.forEach(i => {
+                const b = document.createElement('div');
+                b.style.position = 'absolute';
+                b.style.left = (i.rx * 100) + '%';
+                b.style.top = (i.ry * 100) + '%';
+                b.style.width = (i.rw * 100) + '%';
+                b.style.height = (i.rh * 100) + '%';
+                b.style.border = '1px solid var(--accent)';
+                b.style.background = 'rgba(0,122,204,0.1)';
+                rotContainer.appendChild(b);
+            });
+        }
+
+        wrapper.appendChild(rotContainer);
+
+        if (watermarkText) {
+            const wm = document.createElement('div');
+            wm.className = 'watermark-overlay';
+            wm.textContent = watermarkText;
+            wrapper.appendChild(wm);
+        }
+        
+        const footer = document.createElement('div');
+        footer.className = 'card-footer';
+        footer.innerHTML = `<span>P.${index + 1}</span> <span>${page.isBlank?'<span style="color:var(--text-muted)"><i data-lucide="file" style="width:14px"></i> 空白頁</span>':page.suspect?'<span style="color:#d97706"><i data-lucide="alert-triangle" style="width:14px"></i> 空白</span>':''}</span>`;
+        
+        card.appendChild(wrapper);
+        card.appendChild(footer);
+        els.grid.appendChild(card);
+    });
+    updateStats();
+}
+
+window.rotateLeft = () => { saveHistory(); pagesState.forEach(p=>{ if(p.selected && !p.hiddenBySearch) p.rotation = (p.rotation - 90) % 360; }); saveHistory(); renderGrid(); setStatus('已向左旋轉', 100);};
+window.rotateRight = () => { saveHistory(); pagesState.forEach(p=>{ if(p.selected && !p.hiddenBySearch) p.rotation = (p.rotation + 90) % 360; }); saveHistory(); renderGrid(); setStatus('已向右旋轉', 100);};
+window.deleteSelected = () => {
+    saveHistory();
+    const before = pagesState.length;
+    pagesState = pagesState.filter(p => !(p.selected && !p.hiddenBySearch));
+    saveHistory();
+    renderGrid();
+    setStatus(`已刪除 ${before - pagesState.length} 頁`, 100);
+    els.ctxMenu.style.display = 'none';
+};
+
+window.insertBlankPage = () => {
+    saveHistory();
+    const idx = pagesState.findIndex(p => p.selected && !p.hiddenBySearch);
+    if (idx === -1) return;
+    const ref = pagesState[idx];
+    const newPage = {
+        id: 'blank_'+Date.now(),
+        pdfId: null, pageIndex: 0, originalName: '新增空白頁',
+        rotation: 0, selected: false, suspect: false, isBlank: true, hiddenBySearch: false, textContent: null, redactions: [], texts: [], images: [],
+        pdfPage: null, canvas: null, width: ref.width, height: ref.height
+    };
+    pagesState.splice(idx + 1, 0, newPage);
+    saveHistory();
+    renderGrid();
+    lazyRenderCanvases();
+    els.ctxMenu.style.display = 'none';
+    setStatus('已插入空白頁', 100);
+};
+
+// Search Logic
+let searchTimer = null;
+els.searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(async () => {
+        const term = e.target.value.trim().toLowerCase();
+        if (!term) {
+            pagesState.forEach(p => p.hiddenBySearch = false);
+            renderGrid();
+            return;
+        }
+        
+        setStatus('正在搜尋內容...', 10);
+        let found = 0;
+        for(let i=0; i<pagesState.length; i++){
+            const page = pagesState[i];
+            if(page.isBlank) { 
+                page.hiddenBySearch = true; // hide blanks during search
+                continue; 
+            }
+            if(page.textContent === null) {
+                try {
+                    const textContent = await page.pdfPage.getTextContent();
+                    page.textContent = textContent.items.map(s => s.str).join(' ');
+                } catch(err) {
+                    page.textContent = "";
+                }
+            }
+            
+            if(page.textContent.toLowerCase().includes(term)) {
+                page.hiddenBySearch = false;
+                found++;
+            } else {
+                page.hiddenBySearch = true;
+                page.selected = false; // deselect if hidden
+            }
+            if(i%10===0) setStatus('搜尋中...', ((i+1)/pagesState.length)*100);
+        }
+        renderGrid();
+        setStatus(`搜尋完成：找到 ${found} 頁`, 100);
+    }, 500);
+});
+
+
+// Detail View Modes
+els.redactModeBtn.onclick = () => {
+    isRedactMode = !isRedactMode;
+    isTextMode = false;
+    updateDetailToolbar();
+};
+els.addTextBtn.onclick = () => {
+    isTextMode = !isTextMode;
+    isRedactMode = false;
+    updateDetailToolbar();
+};
+
+function updateDetailToolbar() {
+    els.redactModeBtn.classList.toggle('active', isRedactMode);
+    els.addTextBtn.classList.toggle('active-blue', isTextMode);
+    els.detailContent.style.cursor = isRedactMode ? 'crosshair' : (isTextMode ? 'text' : 'default');
+}
+
+window.openDetailView = async () => {
+    const selectedIdx = pagesState.findIndex(p => p.selected && !p.hiddenBySearch);
+    if(selectedIdx === -1) return;
+    currentDetailIndex = selectedIdx;
+    els.ctxMenu.style.display = 'none';
+    isRedactMode = false;
+    isTextMode = false;
+    updateDetailToolbar();
+    renderDetailView();
+    els.detailModal.style.display = 'flex';
+};
+
+async function renderDetailView() {
+    if(currentDetailIndex < 0 || currentDetailIndex >= pagesState.length) return;
+    const page = pagesState[currentDetailIndex];
+    els.detailTitle.textContent = `預覽 P.${currentDetailIndex + 1} (${page.isBlank?'空白頁':page.originalName})`;
+    els.detailContent.innerHTML = '<span style="color:white">載入高畫質圖片中...</span>';
+    
+    let prevIdx = currentDetailIndex - 1;
+    while(prevIdx >= 0 && pagesState[prevIdx].hiddenBySearch) prevIdx--;
+    let nextIdx = currentDetailIndex + 1;
+    while(nextIdx < pagesState.length && pagesState[nextIdx].hiddenBySearch) nextIdx++;
+    
+    els.detailPrevBtn.style.visibility = prevIdx >= 0 ? 'visible' : 'hidden';
+    els.detailNextBtn.style.visibility = nextIdx < pagesState.length ? 'visible' : 'hidden';
+    els.detailPrevBtn.onclick = () => { currentDetailIndex = prevIdx; renderDetailView(); };
+    els.detailNextBtn.onclick = () => { currentDetailIndex = nextIdx; renderDetailView(); };
+
+    const canvas = await renderPageCanvas(page, 1.5);
+    els.detailContent.innerHTML = '';
+    
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.transform = `rotate(${page.rotation}deg)`;
+    wrapper.style.transition = 'transform 0.1s';
+    wrapper.style.boxShadow = '0 0 20px rgba(0,0,0,0.5)';
+    wrapper.style.background = 'white';
+    wrapper.style.lineHeight = '0'; // prevent weird spacing
+    
+    canvas.style.boxShadow = 'none'; // handled by wrapper
+    wrapper.appendChild(canvas);
+
+    // Overlays rendering
+    if (page.redactions) {
+        page.redactions.forEach((r, idx) => {
+            const box = document.createElement('div');
+            box.className = 'redact-box';
+            box.style.left = (r.rx * 100) + '%';
+            box.style.top = (r.ry * 100) + '%';
+            box.style.width = (r.rw * 100) + '%';
+            box.style.height = (r.rh * 100) + '%';
+            
+            const delBtn = document.createElement('div');
+            delBtn.className = 'overlay-del';
+            delBtn.innerHTML = '×';
+            delBtn.onclick = (e) => { e.stopPropagation(); saveHistory(); page.redactions.splice(idx, 1); saveHistory(); renderDetailView(); renderGrid(); };
+            box.appendChild(delBtn);
+            wrapper.appendChild(box);
+        });
+    }
+    
+    if (page.images) {
+        page.images.forEach((img, idx) => {
+            const box = document.createElement('div');
+            box.className = 'overlay-item';
+            box.dataset.type = 'image';
+            box.dataset.idx = idx;
+            box.style.left = (img.rx * 100) + '%';
+            box.style.top = (img.ry * 100) + '%';
+            box.style.width = (img.rw * 100) + '%';
+            box.style.height = (img.rh * 100) + '%';
+            
+            const imgEl = document.createElement('img');
+            imgEl.src = img.dataUrl;
+            
+            const delBtn = document.createElement('div');
+            delBtn.className = 'overlay-del';
+            delBtn.innerHTML = '×';
+            delBtn.onclick = (e) => { e.stopPropagation(); saveHistory(); page.images.splice(idx, 1); saveHistory(); renderDetailView(); renderGrid(); };
+            
+            const resizeHandle = document.createElement('div');
+            resizeHandle.className = 'resize-handle';
+            
+            box.appendChild(imgEl);
+            box.appendChild(delBtn);
+            box.appendChild(resizeHandle);
+            wrapper.appendChild(box);
+        });
+    }
+
+    if (page.texts) {
+        page.texts.forEach((t, idx) => {
+            const box = document.createElement('div');
+            box.className = 'overlay-item';
+            box.dataset.type = 'text';
+            box.dataset.idx = idx;
+            box.style.left = (t.rx * 100) + '%';
+            box.style.top = (t.ry * 100) + '%';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'overlay-text';
+            input.value = t.text;
+            input.style.width = Math.max(5, t.text.length + 1) + 'ch';
+            
+            input.oninput = () => { input.style.width = Math.max(5, input.value.length + 1) + 'ch'; };
+            input.onblur = () => {
+                if(t.text !== input.value) {
+                    saveHistory();
+                    t.text = input.value;
+                    saveHistory();
+                    renderGrid();
+                }
+            };
+            
+            const delBtn = document.createElement('div');
+            delBtn.className = 'overlay-del';
+            delBtn.innerHTML = '×';
+            delBtn.onclick = (e) => { e.stopPropagation(); saveHistory(); page.texts.splice(idx, 1); saveHistory(); renderDetailView(); renderGrid(); };
+            
+            box.appendChild(input);
+            box.appendChild(delBtn);
+            wrapper.appendChild(box);
+        });
+    }
+
+    els.detailContent.appendChild(wrapper);
+}
+
+// Draw/Drag logic for Overlays
+let isDrawing = false;
+let startX, startY;
+let activeBox = null;
+let activeDrag = null;
+let activeResize = null;
+
+els.detailContent.onmousedown = (e) => {
+    const wrapper = els.detailContent.firstChild;
+    if(!wrapper) return;
+    const rect = wrapper.getBoundingClientRect();
+    if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+
+    // Handle Dragging Overlays
+    const item = e.target.closest('.overlay-item');
+    if(item && !isRedactMode && !isTextMode) {
+        if(e.target.classList.contains('overlay-del') || e.target.tagName === 'INPUT') return;
+        
+        if(e.target.classList.contains('resize-handle')) {
+            activeResize = {
+                el: item,
+                startW: item.offsetWidth,
+                startH: item.offsetHeight,
+                startX: e.clientX,
+                startY: e.clientY
+            };
+            e.preventDefault();
+            return;
+        }
+        
+        activeDrag = {
+            el: item,
+            startX: e.clientX,
+            startY: e.clientY,
+            startLeft: parseFloat(item.style.left) / 100 * rect.width,
+            startTop: parseFloat(item.style.top) / 100 * rect.height
+        };
+        e.preventDefault();
+        return;
+    }
+
+    // Handle New Redaction
+    if(isRedactMode) {
+        isDrawing = true;
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+        activeBox = document.createElement('div');
+        activeBox.className = 'redact-box drawing';
+        activeBox.style.left = startX + 'px';
+        activeBox.style.top = startY + 'px';
+        wrapper.appendChild(activeBox);
+        return;
+    }
+    
+    // Handle New Text
+    if(isTextMode) {
+        saveHistory();
+        const page = pagesState[currentDetailIndex];
+        if(!page.texts) page.texts = [];
+        page.texts.push({
+            text: '文字',
+            rx: (e.clientX - rect.left) / rect.width,
+            ry: (e.clientY - rect.top) / rect.height
+        });
+        isTextMode = false;
+        updateDetailToolbar();
+        saveHistory();
+        renderDetailView();
+        renderGrid();
+        return;
+    }
+};
+
+els.detailContent.onmousemove = (e) => {
+    const wrapper = els.detailContent.firstChild;
+    if(!wrapper) return;
+    const rect = wrapper.getBoundingClientRect();
+    
+    if(activeDrag) {
+        let currentX = e.clientX - activeDrag.startX + activeDrag.startLeft;
+        let currentY = e.clientY - activeDrag.startY + activeDrag.startTop;
+        currentX = Math.max(0, Math.min(currentX, rect.width - activeDrag.el.offsetWidth));
+        currentY = Math.max(0, Math.min(currentY, rect.height - activeDrag.el.offsetHeight));
+        activeDrag.el.style.left = (currentX / rect.width * 100) + '%';
+        activeDrag.el.style.top = (currentY / rect.height * 100) + '%';
+        return;
+    }
+    
+    if(activeResize) {
+        let dw = e.clientX - activeResize.startX;
+        let dh = e.clientY - activeResize.startY;
+        // lock aspect ratio for images
+        if(activeResize.el.dataset.type === 'image') {
+            const ratio = activeResize.startW / activeResize.startH;
+            dh = dw / ratio; 
+        }
+        activeResize.el.style.width = ((activeResize.startW + dw) / rect.width * 100) + '%';
+        activeResize.el.style.height = ((activeResize.startH + dh) / rect.height * 100) + '%';
+        return;
+    }
+
+    if(isDrawing && activeBox && isRedactMode) {
+        let currentX = e.clientX - rect.left;
+        let currentY = e.clientY - rect.top;
+        currentX = Math.max(0, Math.min(currentX, rect.width));
+        currentY = Math.max(0, Math.min(currentY, rect.height));
+        const left = Math.min(startX, currentX);
+        const top = Math.min(startY, currentY);
+        const width = Math.abs(currentX - startX);
+        const height = Math.abs(currentY - startY);
+        
+        activeBox.style.left = (left / rect.width * 100) + '%';
+        activeBox.style.top = (top / rect.height * 100) + '%';
+        activeBox.style.width = (width / rect.width * 100) + '%';
+        activeBox.style.height = (height / rect.height * 100) + '%';
+    }
+};
+
+window.addEventListener('mouseup', (e) => {
+    if(activeDrag || activeResize) {
+        const el = activeDrag ? activeDrag.el : activeResize.el;
+        const idx = el.dataset.idx;
+        const type = el.dataset.type;
+        const page = pagesState[currentDetailIndex];
+        const obj = type === 'image' ? page.images[idx] : page.texts[idx];
+        
+        saveHistory();
+        obj.rx = parseFloat(el.style.left) / 100;
+        obj.ry = parseFloat(el.style.top) / 100;
+        if(type === 'image' && activeResize) {
+            obj.rw = parseFloat(el.style.width) / 100;
+            obj.rh = parseFloat(el.style.height) / 100;
+        }
+        saveHistory();
+        renderGrid();
+        
+        activeDrag = null;
+        activeResize = null;
+        return;
+    }
+
+    if(isDrawing) {
+        isDrawing = false;
+        const wrapper = els.detailContent.firstChild;
+        if(!wrapper || !activeBox) return;
+        const widthPct = parseFloat(activeBox.style.width);
+        const heightPct = parseFloat(activeBox.style.height);
+        if(widthPct > 1 && heightPct > 1) { 
+            saveHistory();
+            const page = pagesState[currentDetailIndex];
+            if(!page.redactions) page.redactions = [];
+            page.redactions.push({
+                rx: parseFloat(activeBox.style.left) / 100,
+                ry: parseFloat(activeBox.style.top) / 100,
+                rw: widthPct / 100,
+                rh: heightPct / 100
+            });
+            saveHistory();
+        }
+        renderDetailView();
+        renderGrid();
+    }
+});
+
+// Image Insertion
+els.imageInput.onchange = (e) => {
+    if(!e.target.files.length || currentDetailIndex === -1) return;
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        saveHistory();
+        const page = pagesState[currentDetailIndex];
+        if(!page.images) page.images = [];
+        
+        // Auto scale inserted image
+        const img = new Image();
+        img.onload = () => {
+            const aspect = img.width / img.height;
+            let rw = 0.3; // 30% of page width
+            let rh = rw / aspect; 
+            // adjust if page is rotated 90 deg? simple relative sizing:
+            page.images.push({
+                dataUrl: event.target.result,
+                rx: 0.1, ry: 0.1, rw: rw, rh: rh
+            });
+            saveHistory();
+            renderDetailView();
+            renderGrid();
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+    els.imageInput.value = '';
+};
+
+els.closeModalBtn.onclick = () => els.detailModal.style.display = 'none';
+
+// Canvas Hack for Texts (Support CJK on export)
+async function textToImage(text) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.font = 'bold 48px sans-serif';
+    const measure = ctx.measureText(text);
+    canvas.width = Math.max(10, measure.width);
+    canvas.height = 60; // enough for 48px
+    
+    const ctx2 = canvas.getContext('2d');
+    ctx2.font = 'bold 48px sans-serif';
+    ctx2.fillStyle = '#000000';
+    ctx2.textBaseline = 'top';
+    ctx2.fillText(text, 0, 5);
+    
+    return canvas.toDataURL('image/png');
+}
+
+async function detectBlanks(){
+    saveHistory();
+    setStatus('開始偵測疑似空白頁...', 0);
+    let suspectCount = 0;
+    for(let i=0; i<pagesState.length; i++){
+        const page = pagesState[i];
+        if (page.isBlank) continue;
+        if(!page.canvas) page.canvas = await renderPageCanvas(page, 0.4);
+        const ctx = page.canvas.getContext('2d', {willReadFrequently: true});
+        const img = ctx.getImageData(0,0,page.canvas.width,page.canvas.height).data;
+        let nonWhite=0, total=page.canvas.width*page.canvas.height;
+        for(let p=0; p<img.length; p+=4){
+            const r=img[p], g=img[p+1], b=img[p+2], a=img[p+3];
+            if(a>20 && !(r>245&&g>245&&b>245)) nonWhite++;
+        }
+        if(nonWhite/total < 0.006){
+            page.suspect = true;
+            page.selected = true;
+            suspectCount++;
+        } else page.suspect = false;
+        if(i%5===0) setStatus('偵測中...', ((i+1)/pagesState.length)*100);
+    }
+    saveHistory();
+    renderGrid();
+    setStatus(`偵測完成：找到 ${suspectCount} 頁疑似空白頁`, 100);
+}
+
+async function doExport(onlySelected = false){
+    const pagesToExport = onlySelected ? pagesState.filter(p => p.selected && !p.hiddenBySearch) : pagesState.filter(p => !p.hiddenBySearch);
+    if(pagesToExport.length === 0) return;
+    setStatus('準備匯出 PDF...', 0);
+    try{
+        const outPdf = await PDFLib.PDFDocument.create();
+        const libDocsCache = {};
+        
+        for(let i=0; i<pagesToExport.length; i++){
+            const page = pagesToExport[i];
+            let copiedPage;
+            
+            if (page.isBlank) {
+                let w = page.width, h = page.height;
+                if (page.rotation % 180 !== 0) { w = page.height; h = page.width; }
+                copiedPage = outPdf.addPage([w, h]);
+            } else {
+                if(!libDocsCache[page.pdfId]){
+                    const loadedInfo = loadedPDFs.find(x => x.id === page.pdfId);
+                    libDocsCache[page.pdfId] = await PDFLib.PDFDocument.load(loadedInfo.bytes.slice(0));
+                }
+                const srcDoc = libDocsCache[page.pdfId];
+                const [p] = await outPdf.copyPages(srcDoc, [page.pageIndex]);
+                copiedPage = outPdf.addPage(p);
+            }
+            
+            if(page.rotation % 360 !== 0){
+                copiedPage.setRotation(PDFLib.degrees(copiedPage.getRotation().angle + page.rotation));
+            }
+
+            const { width, height } = copiedPage.getSize();
+
+            // Redactions
+            if (page.redactions && page.redactions.length > 0) {
+                page.redactions.forEach(rect => {
+                    copiedPage.drawRectangle({
+                        x: rect.rx * width,
+                        y: height - (rect.ry * height) - (rect.rh * height),
+                        width: rect.rw * width,
+                        height: rect.rh * height,
+                        color: PDFLib.rgb(0, 0, 0)
+                    });
+                });
+            }
+
+            // Images
+            if (page.images && page.images.length > 0) {
+                for(let imgData of page.images) {
+                    let img;
+                    if (imgData.dataUrl.startsWith('data:image/png')) { img = await outPdf.embedPng(imgData.dataUrl); } 
+                    else { img = await outPdf.embedJpg(imgData.dataUrl); }
+                    
+                    copiedPage.drawImage(img, {
+                        x: imgData.rx * width,
+                        y: height - (imgData.ry * height) - (imgData.rh * height),
+                        width: imgData.rw * width,
+                        height: imgData.rh * height
+                    });
+                }
+            }
+
+            // Texts (Using Canvas Hack for CJK support)
+            if (page.texts && page.texts.length > 0) {
+                for(let t of page.texts) {
+                    if(!t.text) continue;
+                    const dataUrl = await textToImage(t.text);
+                    const img = await outPdf.embedPng(dataUrl);
+                    
+                    // 16px font approx 2% of standard page height
+                    const displayHeight = height * 0.02;
+                    const displayWidth = displayHeight * (img.width / img.height);
+                    
+                    copiedPage.drawImage(img, {
+                        x: t.rx * width,
+                        y: height - (t.ry * height) - displayHeight,
+                        width: displayWidth,
+                        height: displayHeight
+                    });
+                }
+            }
+
+            setStatus('匯出處理中...', ((i+1)/pagesToExport.length)*100);
+        }
+        
+        const pdfBytes = await outPdf.save();
+        const blob = new Blob([pdfBytes], {type:'application/pdf'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = onlySelected ? 'PDF_Studio_過濾匯出.pdf' : 'PDF_Studio_匯出.pdf';
+        a.click();
+        setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+        setStatus('🎉 匯出成功！', 100);
+    }catch(e){
+        console.error(e);
+        setStatus('匯出失敗: '+e.message, null);
+    }
+}
+
+// Event Listeners
+els.addPdfBtn.onclick = () => els.fileInput.click();
+els.fileInput.onchange = (e) => { if(e.target.files.length) handleFiles(e.target.files); els.fileInput.value=''; };
+els.selectAllBtn.onclick = () => { pagesState.forEach(p=>{if(!p.hiddenBySearch)p.selected=true}); renderGrid(); };
+els.clearSelBtn.onclick = () => { pagesState.forEach(p=>p.selected=false); renderGrid(); };
+els.detectBtn.onclick = detectBlanks;
+els.exportAllBtn.onclick = () => doExport(false);
+els.exportSelectedBtn.onclick = () => doExport(true);
+
+// Drag and drop for workspace
+els.workspace.ondragover = (e) => { e.preventDefault(); };
+els.workspace.ondrop = (e) => { 
+    e.preventDefault(); 
+    if(e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files); 
+};
+
+// Context Menu
+document.addEventListener('click', () => els.ctxMenu.style.display = 'none');
+els.workspace.addEventListener('contextmenu', (e) => {
+    const card = e.target.closest('.page-card');
+    if(!card) return;
+    e.preventDefault();
+    const pageId = card.dataset.id;
+    const page = pagesState.find(p => p.id === pageId);
+    
+    if(!page.selected) {
+        pagesState.forEach(p => p.selected = false);
+        page.selected = true;
+        renderGrid();
+    }
+    
+    els.ctxMenu.style.left = e.pageX + 'px';
+    els.ctxMenu.style.top = e.pageY + 'px';
+    els.ctxMenu.style.display = 'block';
+});
+
+// Keyboard Shortcuts
+document.addEventListener('keydown', (e) => {
+    if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    
+    if(e.key === 'Delete' || e.key === 'Backspace') {
+        if(pagesState.some(p => p.selected && !p.hiddenBySearch)) window.deleteSelected();
+    }
+    if((e.ctrlKey || e.metaKey) && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        pagesState.forEach(p => {if(!p.hiddenBySearch) p.selected = true;});
+        renderGrid();
+    }
+    if((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        window.undo();
+    }
+    if((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+        e.preventDefault();
+        window.redo();
+    }
+    if(e.key === 'Escape') {
+        if(isRedactMode) { els.redactModeBtn.click(); return; }
+        if(isTextMode) { els.addTextBtn.click(); return; }
+        if(els.detailModal.style.display === 'flex') { els.detailModal.style.display = 'none'; return; }
+        pagesState.forEach(p => p.selected = false);
+        renderGrid();
+        els.ctxMenu.style.display = 'none';
+    }
+});
+
+// Init
+try{ 
+    ensureLibs(); 
+    saveHistory(); 
+} catch(e){ setStatus(e.message, null); }
+
+els.themeToggleBtn.innerHTML = isLight ? '<i data-lucide="moon"></i>' : '<i data-lucide="sun"></i>';
+function initIcons() {
+    if (window.lucide) {
+        lucide.createIcons();
+    } else {
+        setTimeout(initIcons, 50);
+    }
+}
+initIcons();
 })();
 </script>
 </body>
